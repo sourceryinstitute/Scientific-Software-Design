@@ -1,0 +1,2 @@
+&physics alpha=1.,L_fin=1.,T_chip=1.,T_air=1. /
+&numerics dt=0.01,nodes=3 /

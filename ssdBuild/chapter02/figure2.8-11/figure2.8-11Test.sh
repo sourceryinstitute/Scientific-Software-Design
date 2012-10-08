@@ -1,0 +1,1 @@
+./chapter02/figure2.8-11/testConductor < ../ssdSource/chapter02/figure2.8-11/testConductor.in

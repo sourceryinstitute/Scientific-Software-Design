@@ -1,0 +1,54 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
+
+MESSAGE("")
+MESSAGE("Configuring Burger_Trilinos_RCP_1D...")
+MESSAGE("")
+
+IF ("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+  MESSAGE(FATAL_ERROR "Error,
+CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
+  " == CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
+Burger_Trilinos_RCP_1D does not support in-source builds!" )
+ENDIF()
+
+PROJECT(Burger_Trilinos_RCP_1D Fortran)
+
+SET(Burger_Trilinos_RCP_1D_VERSION "0.1")
+SET(Burger_Trilinos_RCP_1D_HOME_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "")
+SET(Burger_Trilinos_RCP_1D_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR} CACHE INTERNAL "")
+
+SET(CMAKE_MODULE_PATH ${Burger_Trilinos_RCP_1D_HOME_DIR})
+
+# CMake will attempt to find Trilinos and set a bunch of variables
+# based on the way Trilinos was configured.
+FIND_PACKAGE(Trilinos)
+IF (NOT Trilinos_FOUND)
+  MESSAGE(FATAL_ERROR "Error: Trilinos could not be found. Use -D Trilinos_DIR= to specify path when configuring.")
+ENDIF()
+
+# Use the same compiler and flags as Trilinos.
+SET(CMAKE_CXX_COMPILER ${Trilinos_CXX_COMPILER})
+IF (NOT CMAKE_CXX_COMPILER_FLAGS)
+  SET(CMAKE_CXX_COMPILER_FLAGS ${Trilinos_CXX_COMPILER_FLAGS})
+ENDIF()
+
+SET(CMAKE_Fortran_COMPILER ${Trilinos_Fortran_COMPILER})
+IF (NOT CMAKE_Fortran_COMPILER_FLAGS)
+  SET(CMAKE_Fortran_COMPILER_FLAGS ${Trilinos_Fortran_COMPILER_FLAGS})
+ENDIF()
+
+SET(EXTRA_INCLUDE_DIRS /home/knmorri/Git_Trilinos/Trilinos_MPI_Build/packages/ForTrilinos/src /home/knmorri/Git_Trilinos/Trilinos_MPI_Build/packages/ForTrilinos/test)
+
+INCLUDE_DIRECTORIES(${Trilinos_INCLUDE_DIRS} ${Trilinos_TPL_INCLUDE_DIRS}
+  ${EXTRA_INCLUDE_DIRS})
+LINK_DIRECTORIES(${Trilinos_LIBRARY_DIRS} ${Trilinos_TPL_LIBRARY_DIRS}
+  ${EXTRA_LIBRARY_DIRS})
+
+ADD_EXECUTABLE(main.exe main.F90 field_factory.F90 field.F90 periodic_2nd_order_factory.F90 initializer.F90 periodic_2nd_order.F90)
+
+#SET_TARGET_PROPERTIES(main.exe PROPERTIES LINKER_LANGUAGE CXX)
+#SET(CMAKE_CXX_LINK_EXECUTABLE ${Trilinos_CXX_COMPILER} ${CMAKE_CXX_COMPILER_FLAGS})
+
+TARGET_LINK_LIBRARIES(main.exe ${Trilinos_LIBRARIES} ${Trilinos_TPL_LIBRARIES}
+  ${EXTRA_LIBRARIES})
+

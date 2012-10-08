@@ -1,0 +1,48 @@
+	xlf -qdebug=except -c ../../chapter01/figure1.4/kind_parameters.f03 
+** kind_parameters   === End of Compilation 1 ===
+1501-510  Compilation successful for file kind_parameters.f03.
+	xlf -qdebug=except -c ../../chapter01/figure1.4/conduction.f03 
+** conduction_module   === End of Compilation 1 ===
+1501-510  Compilation successful for file conduction.f03.
+	xlf -qdebug=except -c ../figure2.8-11/problem.f03 
+** problem_class   === End of Compilation 1 ===
+1501-510  Compilation successful for file problem.f03.
+	xlf -qdebug=except -c ../figure2.8-11/differentiator.f03 
+** differentiator_class   === End of Compilation 1 ===
+1501-510  Compilation successful for file differentiator.f03.
+	xlf -qdebug=except -c ../figure2.8-11/conductor.f03 
+** conductor_class   === End of Compilation 1 ===
+1501-510  Compilation successful for file conductor.f03.
+	xlf -qdebug=except -c fun_conductor.f03 
+** fun_conductor_class   === End of Compilation 1 ===
+1501-510  Compilation successful for file fun_conductor.f03.
+	xlf -qdebug=except -c main.f03 
+** initializer   === End of Compilation 1 ===
+ EXCEPTION terminates program: no handler for exception.
+ Exception of type: TRAP at 1059CC04.  Regs:
+ 307FA8B8 2FF1AB40 30274470 309D47F8 00000000 307FC138 00000053 989D47F8
+ 307FAF9C 989D47F8 00000801 FFC00000 1059C6F8 3000CF10 302940C8 2FF1B355
+ 2FF1B356 2FF1B34A 0000002D 00000009 00000022 00000000 01510000 30010170
+ 00001880 3000CF68 00000047 30291068 00000020 30068630 30276E00 30276728
+ resume:  cr:      lr:      ctr:     xer:     fpscr:   msr:     mq:
+ 1059CC08 42223428 1059C700 D03A9CFC 00000009 82004000 0000D0B2 DEADBEEF
+ Trap condition: -4194304 l>= 2049                 logical compare
+ Trap instruction:    T  5,R11,R10
+ Traceback:
+ Line     ? Disp 00000D8C   cu_end                           Dsa: 2FF1AB40
+ Line     ? Disp 0000012C   p4_fmai                          Dsa: 2FF1ABD0
+ Line     ? Disp 000000C8   process_non_terminal4            Dsa: 2FF1AF40
+ Line     ? Disp 00000184   pass4                            Dsa: 2FF1AFA0
+ Line     ? Disp 00000258   get_fpo                          Dsa: 2FF1B000
+ Line     ? Disp 00000158   ftphas1                          Dsa: 2FF1B050
+ Line     ? Disp 000000AC   dophase                          Dsa: internal
+ Line     ? Disp 00000210   ftroot                           Dsa: 2FF1B100
+ Line     ? Disp 00000C58   ftmain                           Dsa: 2FF1C890
+ Line     ? Disp 00000094   f8ent                            Dsa: 2FF22120
+ Line     ? Disp 00000294                                    Dsa: 2FF22790
+ --- End of call chain ---
+1501-511  Compilation failed for file main.f03.
+make: 1254-004 The error code from the last command is 217.
+
+
+Stop.

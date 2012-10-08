@@ -1,0 +1,13 @@
+#!/bin/bash
+
+SRC_PATH=/home/knmorri/Git_Trilinos/Tutorial/Burgers_Trilinos_Factory_RCP_1D/src
+EXTRA_ARGS=$@
+
+cmake \
+          -D Trilinos_DIR:FILEPATH=/home/knmorri/Git_Trilinos/Trilinos-MPI-10.0 \
+          -D CMAKE_VERBOSE_MAKEFILE:BOOL=TRUE\
+          -D CMAKE_Fortran_FLAGS:STRING="-g -qxlf2003=polymorphic -qxlf2003=autorealloc -WF,-C! -O3 -qhot" \
+          -D CMAKE_CXX_FLAGS:STRING="-qrtti=all -O3 -qhot" \
+          ${EXTRA_ARGS} \
+          ${SRC_PATH}
+

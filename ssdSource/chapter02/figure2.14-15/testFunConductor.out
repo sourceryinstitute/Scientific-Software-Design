@@ -1,0 +1,4 @@
+initial temperature =   1.0     0.75     0.50     0.25      0.0    
+final temperature   =   1.0     0.75     0.50     0.25      0.0    
+|dT/dt|=0.000E+00<1.000E-06
+ In main: test passed. :)

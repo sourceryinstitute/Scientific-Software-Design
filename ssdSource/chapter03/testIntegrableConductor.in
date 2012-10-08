@@ -1,0 +1,3 @@
+&physics alpha=1.,L_fin=1.,T_chip=1.,T_air=0. /
+&numerics dt=0.01,nodes=3 /
+&test_suite scheme=1/
