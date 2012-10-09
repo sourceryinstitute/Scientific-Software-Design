@@ -1,1 +1,0 @@
-./chapter03/testIntegrableConductor < ../ssdSource/chapter03/testIntegrableConductor.in
