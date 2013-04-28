@@ -168,7 +168,7 @@ module periodic_2nd_order_module
 
     if (me == 1) then 
         west = num_images()
-        east = 2
+        east = merge(1,2,num_images()==1)
     else if (me == num_images()) then
         west = me - 1
         east = 1
@@ -207,7 +207,7 @@ module periodic_2nd_order_module
 
     if (me == 1) then 
         west = num_images()
-        east = 2
+        east = merge(1,2,num_images()==1)
     else if (me == num_images()) then
         west = me - 1
         east = 1
