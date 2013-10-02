@@ -5,6 +5,8 @@ compile=ifort
 #The following compilers correctly compile this code:
 compile=xlf2003 
 compile=nagfor -f2003 
+compile=ifort -standard-semantics
+compile=pgfortran -Mallocatable=03
 
 executable=chaos
 

@@ -3,8 +3,9 @@
 compile=ifort
 #The following compilers correclty compile this code:
 compile=xlf2003 
-compile=gfortran
+compile=pgfortran -Mallocatable=03
 compile=nagfor 
+compile=gfortran -std=f2008
 
 executable=testIntegrableConductor
 objects=conduction.o differentiator.o problem.o kind_parameters.o integrable_conductor.o initializer.o field.o linear_solve.o

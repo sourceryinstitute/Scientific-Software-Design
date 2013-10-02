@@ -1,10 +1,11 @@
 #The following compilers have one or more bugs preventing compilation of this code
 #(Bug reports have been submited to the compiler team):
 compile=gfortran
-compile=ifort
 #The following compilers correctly compile this code:
 compile=xlf2003
-compile=nagfor -f2003
+compile=nagfor 
+compile=pgfortran
+compile=ifort
 
 executable=superfluid
 objects=vortex.o hermetic.o
