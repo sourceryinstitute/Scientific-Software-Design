@@ -1,11 +1,18 @@
-#The following compiler has bugs that prevent compilation of this code
-#(Bug reports have been submitted to the compiler team):
-compile=ifort
-#The following compilers correclty compile this code:
-compile=xlf2003 
-compile=pgfortran -Mallocatable=03
-compile=nagfor 
-compile=gfortran -std=f2008
+#Cray compiler command
+cray=ftn -ew -h
+#Intel compiler command
+intel=ifort -standard-semantics
+#IBM compiler command
+ibm=xlf2003
+#NAG compiler command
+nag=nagfor -f2008 -fpp -C=all
+#GNU compiler command
+gnu=gfortran -std=f2008
+#Portland Group compiler command
+pg=pgfortran -Mallocatable=03
+#GNU compiler command
+compile=$(gnu)
+
 
 executable=testIntegrableConductor
 objects=conduction.o differentiator.o problem.o kind_parameters.o integrable_conductor.o initializer.o field.o linear_solve.o

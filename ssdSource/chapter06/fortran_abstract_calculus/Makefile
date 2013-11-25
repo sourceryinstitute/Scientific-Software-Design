@@ -1,12 +1,18 @@
-#The following compiler has one or more bugs preventing compilation of this code
-#(Bug reports have been submitted to the compiler team) :
-compile=gfortran
-compile=ifort
-#The following compilers correctly compile this code:
-compile=xlf2003 
-compile=nagfor -f2003 
-compile=ifort -standard-semantics
-compile=pgfortran -Mallocatable=03
+#Cray compiler command
+cray=ftn -ew -h
+#Intel compiler command
+intel=ifort -standard-semantics
+#IBM compiler command
+ibm=xlf2003
+#NAG compiler command
+nag=nagfor -f2008 -fpp -C=all
+#GNU compiler command
+gnu=gfortran -std=f2008
+#Portland Group compiler command
+pg=pgfortran -Mallocatable=03
+#GNU compiler command
+compile=$(gnu)
+
 
 executable=chaos
 

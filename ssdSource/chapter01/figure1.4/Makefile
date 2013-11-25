@@ -1,8 +1,17 @@
-#This code compiles with the following compilers:
-compile=xlf2003 
-compile=ifort
-compile=gfortran
-compile=nagfor 
+#Cray compiler command
+cray=ftn -ew -h
+#Intel compiler command
+intel=ifort -standard-semantics
+#IBM compiler command
+ibm=xlf2003
+#NAG compiler command
+nag=nagfor -f2008 -fpp -C=all
+#GNU compiler command
+gnu=gfortran -std=f2008
+#Portland Group compiler command
+pg=pgfortran -Mallocatable=03
+#GNU compiler command
+compile=$(gnu)
 
 executable=figure1.4
 objects=conduction.o kind_parameters.o

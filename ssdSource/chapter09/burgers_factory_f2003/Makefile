@@ -1,11 +1,17 @@
-#The following compilers have bugs that prevent compilation of this code
-#(Bug reports have been submitted to the compiler teams):
-compile=ifort
-compile=gfortran
-compile=nagfor -f2003
-#The following compilers compile this code correctly:
-compile=xlf2003 
-compile=nagfor
+#Cray compiler command
+cray=ftn -ew -h
+#Intel compiler command
+intel=ifort -standard-semantics
+#IBM compiler command
+ibm=xlf2003
+#NAG compiler command
+nag=nagfor -f2008 -fpp -C=all
+#GNU compiler command
+gnu=gfortran -std=f2008
+#Portland Group compiler command
+pg=pgfortran -Mallocatable=03
+#GNU compiler command
+compile=$(gnu)
 
 executable=burgers
 objects = field.o field_factory.o periodic_6th_factory.o periodic_6th_order.o matrix.o kind_parameters.o 

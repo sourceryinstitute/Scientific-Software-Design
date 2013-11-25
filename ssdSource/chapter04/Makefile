@@ -1,10 +1,17 @@
-#This following compiler has one or more bugs that prevent compilation of this code
-#(Bug reports have been submitted to the compiler team):
-compile=gfortran
-#This code works with the following compilers:
-compile=xlf2003
-compile=ifort
-compile=nagfor -f2003
+#Cray compiler command
+cray=ftn -ew -h
+#Intel compiler command
+intel=ifort -standard-semantics
+#IBM compiler command
+ibm=xlf2003
+#NAG compiler command
+nag=nagfor -f2008 -fpp -C=all
+#GNU compiler command
+gnu=gfortran -std=f2008
+#Portland Group compiler command
+pg=pgfortran -Mallocatable=03
+#GNU compiler command
+compile=$(intel)
 
 executable=astronaut
 objects=astronaut.o abstract_speaker.o

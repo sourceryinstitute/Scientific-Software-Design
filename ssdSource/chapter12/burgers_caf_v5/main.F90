@@ -48,7 +48,6 @@ program main
   real(rkind) :: dt,half=0.5,t=0.,t_final=0.1,nu=1.
   !integer ,parameter    :: grid_resolution=8*32**3
   integer ,parameter     :: grid_resolution=32
-  integer     :: step
   procedure(initial_field) ,pointer :: initial
 
 !variables for code testing

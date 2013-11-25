@@ -1,9 +1,18 @@
-#The following compiler compiles this code but generates a runtime error:
-compile=ifort
-#The following compilers correctly compiler this code:
-compile=xlf2003
-compile=nagfor -f2003
-compile=gfortran
+#Cray compiler command
+cray=ftn -ew -h
+#Intel compiler command
+intel=ifort -standard-semantics
+#IBM compiler command
+ibm=xlf2003
+#NAG compiler command
+nag=nagfor -f2008 -fpp -C=all
+#GNU compiler command
+gnu=gfortran -std=f2008
+#Portland Group compiler command
+pg=pgfortran -Mallocatable=03
+#GNU compiler command
+compile=$(gnu)
+
 
 executable=testConductor
 objects=conduction.o differentiator.o problem.o conductor.o kind_parameters.o

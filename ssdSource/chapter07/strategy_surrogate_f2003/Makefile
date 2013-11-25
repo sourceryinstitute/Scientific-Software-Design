@@ -1,10 +1,17 @@
-# The following compilers have bugs that prevent compilation of this code  
-# (Bug report submitted to each vendor):
-compile=gfortran      
-compile=ifort         
-# The following compiler compiles the code correctly:
-compile=xlf2003       
-compile=nagfor
+#Cray compiler command
+cray=ftn -ew -h
+#Intel compiler command
+intel=ifort -standard-semantics
+#IBM compiler command
+ibm=xlf2003
+#NAG compiler command
+nag=nagfor -f2008 -fpp -C=all
+#GNU compiler command
+gnu=gfortran -std=f2008
+#Portland Group compiler command
+pg=pgfortran -Mallocatable=03
+#GNU compiler command
+compile=$(gnu)
 
 objects=integrand.o lorenz.o timed_lorenz.o surrogate.o strategy.o explicit_euler.o runge_kutta_2nd.o
 executable=timed_lorenz
