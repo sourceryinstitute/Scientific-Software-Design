@@ -15,13 +15,14 @@ http://wwww.cambridge.org/Rouson via the "Resources" link.
 
 Organization
 ------------
-The codes are in the ssdSource directory and organized into subdirectories named after
-after the book in which the code can be found.  The ssdSource directoy holds a CMake
-project (http://www.cmake.org). The buildScripts directory contains CMake commands for
-each supported compiler.  The ssdBuild directory, if present, can be used for building
-all of the executables in an automated fashion.  (If ssdBuild does not exist, create u
-it or a directory with the name of your choice at the same level as the buildScripts 
-directory before proceeding to the "Building" section below.)
+The codes are in the ssdSource directory and organized into subdirectories named 
+after the book in which the code can be found.  The ssdSource directoy holds a 
+CMake project (http://www.cmake.org). The buildScripts directory contains CMake 
+commands for each supported compiler.  The ssdBuild directory, if present, can be 
+used for building all of the executables in an automated fashion.  (If ssdBuild 
+does not exist, create it or a directory with the name of your choice at the same 
+level as the buildScripts directory before proceeding to the "Building" section 
+below.)
 
 Building
 --------
@@ -90,11 +91,9 @@ are interested in assisting.
 
 *The only features used in this book that are not supported by GNU Fortran 4.9 
 relate to the following two gfortran bugs:
-1. Bug 47545: This prevents compiling with deferred-length components. A workaround is
-   chapter02/figure2.4/gfortran_oo_hello_world.F90.
+1. Bug 47545: This prevents compiling with deferred-length components. A workaround 
+   is provided in chapter02/figure2.4/gfortran_oo_hello_world.F90.
 2. Bug 45170 (comment 9): This presumably precludes returning character variables 
    with allocatable lengths.
 The CMake scripts will disable the compilation of the offending codes when building 
 with gfortran.
-
-
