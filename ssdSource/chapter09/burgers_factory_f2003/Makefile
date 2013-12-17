@@ -1,7 +1,7 @@
 #Cray compiler command
 cray=ftn -ew -h
 #Intel compiler command
-intel=ifort -standard-semantics
+intel=ifort -standard-semantics 
 #IBM compiler command
 ibm=xlf2003
 #NAG compiler command
@@ -10,16 +10,16 @@ nag=nagfor -f2008 -fpp -C=all
 gnu=gfortran -std=f2008
 #Portland Group compiler command
 pg=pgfortran -Mallocatable=03
-#GNU compiler command
+#Edit the following line to select the compiler
 compile=$(gnu)
+
+#Edit the following LAPACK/BLAS library location (Reference implementations available at http://www.netlib.org.)
+library = -lblas -llapack -L/usr/lib/libblas:/usr/lib/liblapack
+#Use this line if you will like to use the LAPACK/BLAS optimized for IBM POWER architecture platforms:
+#library = -lessl
 
 executable=burgers
 objects = field.o field_factory.o periodic_6th_factory.o periodic_6th_order.o matrix.o kind_parameters.o 
-#Use this line if you have built LAPACK/BLAS from source obtained from http://www.netlib.org.
-#library = -lblas -L/path-to-lapack/lapack-3.3.1/
-library = -lblas -llapack -L/Users/rouson/bin/lapack-3.4.1/
-#Use this line if you will like to the LAPACK/BLAS optimized for IBM POWER architecture platforms:
-#library = -lessl
 
 $(executable): main.o $(objects) Makefile
 	$(compile)  main.o $(objects) -o $(executable) $(library)

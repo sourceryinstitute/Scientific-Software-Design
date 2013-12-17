@@ -16,7 +16,7 @@ http://wwww.cambridge.org/Rouson via the "Resources" link.
 Organization
 ------------
 The codes are in the ssdSource directory and organized into subdirectories named 
-after the book in which the code can be found.  The ssdSource directoy holds a 
+after the chapter in which the code can be found.  The ssdSource directoy holds a 
 CMake project (http://www.cmake.org). The buildScripts directory contains CMake 
 commands for each supported compiler.  The ssdBuild directory, if present, can be 
 used for building all of the executables in an automated fashion.  (If ssdBuild 
@@ -26,6 +26,10 @@ below.)
 
 Building
 --------
+If you are building inside the HPCLinux distribution available at 
+http://www.hpclinux.org, please enter the command "source ./intel.sh" inside the
+scientific-software-design directory before continuing.
+
 The preferred method for compiling the code in this repository relies upon the 
 automated, open-source CMake build system.  CMake is available for multiple operating
 systems at http://www.cmake.org.  CMake can also be installed automatically via 

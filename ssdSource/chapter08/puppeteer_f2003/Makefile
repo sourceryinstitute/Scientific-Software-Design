@@ -11,7 +11,7 @@ gnu=gfortran -std=f2008
 #Portland Group compiler command
 pg=pgfortran -Mallocatable=03
 #GNU compiler command
-compile=$(gnu)
+compile=$(intel)
 
 executable=weather
 
