@@ -52,7 +52,7 @@ program main
   real ,dimension(:), allocatable  :: results_check
   real ,parameter ,dimension(4)  &
             :: results= (/-10.1632519,10.0000000,-15.8904438,20.3053379/)
-  real ,parameter                  :: epsilon=1.0e-6
+  real ,parameter                  :: tolerance=8.0e-2
 
   if (debugging) print *,'main: start'
   allocate (sky, puff, earth)
@@ -74,7 +74,7 @@ program main
     print *,boundary_layer%state_vector()
     if (step==num_steps) then
       results_check=boundary_layer%state_vector()
-      if (abs(sum(results_check-results))<=1.0e-6) print *, 'Test passed'
+      if (all(abs(results_check-results)<=tolerance)) print *, 'Test passed'
     end if      
   end do
   if (debugging) print *,'main: end'

@@ -46,7 +46,7 @@ program main
   real ,dimension(:), allocatable  :: results_check
   real ,parameter ,dimension(space_dimension+1)  &
             :: results= (/20.0003624,-5.19188404,1.74187779,31.4894981/)
-  real ,parameter                  :: epsilon=1.0e-6                            
+  real ,parameter                  :: tolerance=2.E-02                            
 
   ! Initialize and choose strategy
   attractor = &
@@ -70,7 +70,7 @@ program main
     print *,timed_attractor%output()
     if (step==num_steps) then
       results_check=timed_attractor%output()
-      if (abs(sum(results_check-results))<=1.0e-6) print *, 'Test passed'
+      if (all(abs(results_check-results)<=tolerance)) print *, 'Test passed'
     end if 
   end do
 end program main
