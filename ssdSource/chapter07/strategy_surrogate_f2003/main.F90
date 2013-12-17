@@ -46,7 +46,7 @@ program main
   real ,dimension(:), allocatable  :: results_check
   real ,parameter ,dimension(space_dimension+1)  &
             :: results= (/20.0003624,-5.19188404,1.74187779,31.4894981/)
-  real ,parameter                  :: tolerance=2.E-02                            
+  real ,parameter                  :: tolerance=9.E-02                            
 
   ! Initialize and choose strategy
   attractor = &
