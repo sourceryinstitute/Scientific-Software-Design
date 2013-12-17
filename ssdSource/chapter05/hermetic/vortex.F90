@@ -62,6 +62,7 @@ contains
       theta = i*delta/radius
       current%next%point = [radius*cos(theta),radius*sin(theta),0.]
       current => current%next 
+      if (.not.associated(current)) exit ! not in the original printing
     end do
     current%next => ring ! point tail to head
   end function

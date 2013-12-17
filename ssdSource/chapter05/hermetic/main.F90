@@ -35,5 +35,5 @@ program main
   helium => vortex_(radius=1.,num_points=8)
   call helium%output()
   call helium%assert(node_index, check_value)
-  call helium%force_finalization()
+ !call helium%force_finalization()
 end program

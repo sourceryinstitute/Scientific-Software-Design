@@ -13,10 +13,15 @@ pg=pgfortran -Mallocatable=03
 #Edit the following line to select the compiler
 compile=$(gnu)
 
-#Edit the following LAPACK/BLAS library location (Reference implementations available at http://www.netlib.org.)
-library = -lblas -llapack -L/usr/lib/libblas:/usr/lib/liblapack
-#Use this line if you will like to use the LAPACK/BLAS optimized for IBM POWER architecture platforms:
-#library = -lessl
+ifeq ($(compile),$(ibm))
+  library = -lessl
+else
+  ifeq ($(compile),$(cray))
+    library = 
+  else
+    library = -lblas -llapack -L/usr/lib
+  endif
+endif
 
 executable=burgers
 objects = field.o field_factory.o periodic_6th_factory.o periodic_6th_order.o matrix.o kind_parameters.o 
