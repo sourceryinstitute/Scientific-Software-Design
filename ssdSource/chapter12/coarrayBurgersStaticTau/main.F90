@@ -65,7 +65,7 @@ program main
 #endif
 
 ! Checks that local grid = grid / num images
-  call assert(local_grid_size*num_images()==grid_resolution,error_message("main: The size of the computational domain does not provide same array size for all images."))
+  call assert(local_grid_size*num_images()==grid_resolution,error_message("main: Grid size divides unevenly across images."))
   sync all; call CPU_TIME(t1); sync all
 
   initial => u_initial

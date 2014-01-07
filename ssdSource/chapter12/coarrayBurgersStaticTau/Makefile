@@ -37,7 +37,7 @@ field.o: field.F90 kind_parameters.o math_constants.o object_interface.o ForTril
 kind_parameters.o: kind_parameters.F90 Makefile
 	$(compile) $(OPTS) -c kind_parameters.F90
 
-math_constants.o: math_constants.F90 kind_parameters.o Makefile
+math_constants.o: math_constants.F90 kind_parameters.o preprocessor_definitions Makefile
 	$(compile) $(OPTS) -c math_constants.F90
 
 object_interface.o: $(library_path)/object_interface.F90 preprocessor_definitions Makefile
