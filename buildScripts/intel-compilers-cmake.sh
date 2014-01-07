@@ -5,7 +5,7 @@ EXTRA_ARGS=$@
 rm -f CMakeCache.txt
 cmake \
   -D CMAKE_Fortran_COMPILER:FILEPATH=ifort \
-  -D CMAKE_Fortran_FLAGS:STRING="-standard-semantics -coarray=shared -coarray-num-images=1" \
+  -D CMAKE_Fortran_FLAGS:STRING="-standard-semantics -coarray=shared -coarray-num-images=4" \
   -D CMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
   -D ALL_EXAMPLES_ENABLED:BOOL=OFF \
 $EXTRA_ARGS \

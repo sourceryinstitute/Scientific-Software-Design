@@ -1,8 +1,6 @@
 add_executable(burgers_caf_tau main.F90 field.F90 periodic_2nd_order.F90 kind_parameters.F90 library/co_object_interface.F90 library/object_interface.F90 math_constants.F90 library/ForTrilinos_assertion_utility.F90 library/ForTrilinos_error.F90)
-set(utilities_root ./)
 set(include_directory ./include-files)
 
-set(objectOriented_directory ${CMAKE_CURRENT_SOURCE_DIR}/../objectOrientedBasketball)
 if ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "Cray")
   configure_file(${include_directory}/cray_capabilities.txt ${CMAKE_CURRENT_SOURCE_DIR}/library/compiler_capabilities.txt copyonly)
   configure_file(${include_directory}/cray_capabilities.txt ${CMAKE_CURRENT_SOURCE_DIR}/compiler_capabilities.txt copyonly)
