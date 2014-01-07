@@ -228,6 +228,7 @@ contains
    if (num_images()==1.or.num_images()==2) then
      sync all      
    else
+#ifndef COMPILER_LACKS_MULTI_IMAGE_COARRAYS
       if (this_image()==1) then
         sync images((/2,num_images()/))
       elseif (this_image()==num_images()) then
@@ -235,6 +236,7 @@ contains
       else
         sync images((/this_image()-1,this_image()+1/))
       endif
+#endif
     endif
 #ifdef TAU
     call TAU_STOP('sync_assign_field')
