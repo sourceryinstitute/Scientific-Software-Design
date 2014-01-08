@@ -46,13 +46,12 @@ program main
   implicit none
   type(periodic_2nd_order), save :: u,half_uu,u_half
   real(rkind) :: dt,half=0.5,t=0.,t_final=0.1,nu=1.
-  !integer ,parameter    :: grid_resolution=8*32**3
-  integer ,parameter     :: grid_resolution=32
+  integer ,parameter     :: grid_resolution=1024
   procedure(initial_field) ,pointer :: initial
 
-!variables for code testing
-  integer     ::  node_index=14
-  real(rkind) ::  check_value=8.8076685953320908
+  ! This line was not in the textbook:
+  real(rkind), parameter :: pi=acos(-1._rkind),expected_zero_location=pi
+
 
   initial => u_initial
   call u%construct(initial,grid_resolution)
@@ -68,7 +67,10 @@ program main
     u  = u + (u_half%xx()*nu - half_uu%x())*dt ! second substep
     t = t + dt
   end do
-  print *,'u at t=',t
+ !print *,'u at t=',t
   call u%output()
-  call u%assert(node_index, check_value)
+  if (u%this_image_contains_midpoint()) then
+    if (.not. u%has_a_zero_at(expected_zero_location)) error stop "Test failed."
+    print *,'Test passed.'
+  end if
 end program

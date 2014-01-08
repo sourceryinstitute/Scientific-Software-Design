@@ -46,9 +46,14 @@ module periodic_2nd_order_module
     generic   :: assignment(=) => assign
     generic   :: operator(+)   => add
     generic   :: operator(*)   => multiply
+    ! The following procedures were not included in the textbook:
+    procedure, nopass :: this_image_contains_midpoint
+    procedure :: has_a_zero_at
   end type
 
   real(rkind) ,parameter :: pi=acos(-1._rkind)
+  ! The following variable was not included in the textbook:
+  real, allocatable :: local_grid(:)
 
   abstract interface
     real(rkind) pure function initial_field(x)
@@ -88,13 +93,14 @@ module periodic_2nd_order_module
     integer(ikind) ,intent(in) :: num_grid_pts
     integer :: i, local_grid_size
 
-    !<-- assume mod(num_grif_pts, num_images()) == 0
+    !<-- assume mod(num_grid_pts, num_images()) == 0
     local_grid_size = num_grid_pts / num_images()
 
     ! set up the global grid points
     allocate (this%global_f(local_grid_size)[*])
 
-    this%global_f(:) = grid()
+    local_grid = grid() ! This line was not in the textbook 
+    this%global_f(:) = local_grid ! The text book version directly assigns grid() to this%globa_f(:)
 
     do i = 1, local_grid_size
         this%global_f(i) = initial(this%global_f(i))
@@ -232,4 +238,23 @@ module periodic_2nd_order_module
 
     d2f_dx2 = tmp_field_array
   end function
+
+  ! The following procedures were not included in the initial publication of the textbook:
+
+  pure function has_a_zero_at(this, expected_location) result(zero_at_expected_location)
+    class(periodic_2nd_order) ,intent(in) :: this
+    real(rkind) ,intent(in) :: expected_location
+    real(rkind), parameter :: tolerance = 1.0E-06_rkind
+    integer :: nearest_grid_point
+    logical :: zero_at_expected_location
+    nearest_grid_point = minloc(abs(local_grid-expected_location),dim=1)
+    zero_at_expected_location = merge(.true.,.false., abs(this%global_f(nearest_grid_point)) < tolerance  )
+  end function
+
+  function this_image_contains_midpoint() result(within_bounds)
+    logical within_bounds
+    !<-- assume mod(num_grid_pts, num_images()) == 0
+    within_bounds = merge(.true.,.false., (this_image()==num_images()/2+1) )
+  end function
+
 end module
