@@ -67,7 +67,7 @@ contains
   function total(lhs,rhs)
     class(field) ,intent(in) :: lhs
     class(field) ,intent(in) :: rhs
-    class(field) ,allocatable :: total
+    type(field) ,allocatable :: total
     allocate (total)
     total%f = lhs%f + rhs%f
   end function
@@ -75,7 +75,7 @@ contains
   function difference(lhs,rhs)
     class(field) ,intent(in) :: lhs
     class(field) ,intent(in)  :: rhs
-    class(field) ,allocatable :: difference
+    type(field) ,allocatable :: difference
     allocate (difference)
     difference%f = lhs%f - rhs%f
   end function
@@ -83,7 +83,7 @@ contains
   function product_(lhs,rhs)
     class(field) ,intent(in) :: lhs
     class(field) ,intent(in)  :: rhs
-    class(field) ,allocatable :: product_
+    type(field) ,allocatable :: product_
     allocate(product_)
     product_%f = lhs%f * rhs%f
   end function
@@ -91,7 +91,7 @@ contains
   function multiple(lhs,rhs)
     class(field) ,intent(in) :: lhs
     real(rkind) ,intent(in)  :: rhs
-    class(field) ,allocatable :: multiple
+    type(field) ,allocatable :: multiple
     allocate(multiple)
     multiple%f = lhs%f * rhs
   end function

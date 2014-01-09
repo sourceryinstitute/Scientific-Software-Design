@@ -42,7 +42,6 @@ module periodic_2nd_order_module
     procedure :: xx            => d2f_dx2
     procedure :: output
     procedure :: runge_kutta_2nd_step => rk2_dt
-    procedure :: assert
     generic   :: assignment(=) => assign
     generic   :: operator(+)   => add
     generic   :: operator(*)   => multiply
@@ -70,20 +69,6 @@ module periodic_2nd_order_module
     do i = 1, size(this%global_f)
         print *, (this_image()-1)*size(this%global_f) + i, &
                  this%global_f(i)
-    end do
-  end subroutine
-
-  subroutine assert(this, node_index, check_value)
-    class(periodic_2nd_order) ,intent(in) :: this
-    integer                   ,intent(in) :: node_index
-    real(rkind)               ,intent(in) :: check_value
-    integer                               :: i
-    real(rkind)               ,parameter  :: epsilon=1.0e-6
- 
-    do i=1, size(this%global_f)
-      if (((this_image()-1)*size(this%global_f)+i)==node_index) then
-        if (abs(this%global_f(i)-check_value) <=epsilon) print *, 'Test passed'
-      end if
     end do
   end subroutine
 
@@ -144,7 +129,7 @@ module periodic_2nd_order_module
   function add_field (this, rhs)
     class(periodic_2nd_order), intent(in) :: this
     class(field), intent(in) :: rhs
-    class(field), allocatable :: add_field
+    type(field), allocatable :: add_field
 
     allocate (add_field)
     add_field = rhs%state()+this%global_f(:)
@@ -152,7 +137,7 @@ module periodic_2nd_order_module
 
   function multiply_field (this, rhs)
     class(periodic_2nd_order), intent(in) :: this, rhs
-    class(field), allocatable :: multiply_field
+    type(field), allocatable :: multiply_field
 
     allocate (multiply_field)
     multiply_field = this%global_f(:)*rhs%global_f(:)
@@ -160,7 +145,7 @@ module periodic_2nd_order_module
 
   function df_dx(this)
     class(periodic_2nd_order), intent(in) :: this
-    class(field) ,allocatable  :: df_dx
+    type(field) ,allocatable  :: df_dx
     integer(ikind) :: i,nx, me, east, west
     real(rkind) :: dx
     real(rkind), allocatable :: tmp_field_array(:)
@@ -199,7 +184,7 @@ module periodic_2nd_order_module
 
   function d2f_dx2(this)
     class(periodic_2nd_order), intent(in) :: this
-    class(field) ,allocatable  :: d2f_dx2
+    type(field) ,allocatable  :: d2f_dx2
     integer(ikind) :: i,nx, me, east, west
     real(rkind) :: dx
     real(rkind), allocatable :: tmp_field_array(:)
