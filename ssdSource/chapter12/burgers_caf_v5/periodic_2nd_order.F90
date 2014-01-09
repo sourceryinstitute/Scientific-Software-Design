@@ -46,7 +46,6 @@ module periodic_2nd_order_module
     generic   :: operator(+)   => add
     generic   :: operator(*)   => multiply
     ! The following procedures were not included in the textbook:
-    procedure, nopass :: this_image_contains_midpoint
     procedure :: has_a_zero_at
   end type
 
@@ -129,23 +128,19 @@ module periodic_2nd_order_module
   function add_field (this, rhs)
     class(periodic_2nd_order), intent(in) :: this
     class(field), intent(in) :: rhs
-    type(field), allocatable :: add_field
-
-    allocate (add_field)
+    type(field) :: add_field
     add_field = rhs%state()+this%global_f(:)
   end function
 
   function multiply_field (this, rhs)
     class(periodic_2nd_order), intent(in) :: this, rhs
-    type(field), allocatable :: multiply_field
-
-    allocate (multiply_field)
+    type(field) :: multiply_field
     multiply_field = this%global_f(:)*rhs%global_f(:)
   end function
 
   function df_dx(this)
     class(periodic_2nd_order), intent(in) :: this
-    type(field) ,allocatable  :: df_dx
+    type(field) :: df_dx
     integer(ikind) :: i,nx, me, east, west
     real(rkind) :: dx
     real(rkind), allocatable :: tmp_field_array(:)
@@ -153,7 +148,7 @@ module periodic_2nd_order_module
     nx=size(this%global_f)
     dx=2.*pi/(real(nx,rkind)*num_images())
 
-    allocate(df_dx,tmp_field_array(nx))
+    allocate(tmp_field_array(nx))
 
     me = this_image()
 
@@ -184,7 +179,7 @@ module periodic_2nd_order_module
 
   function d2f_dx2(this)
     class(periodic_2nd_order), intent(in) :: this
-    type(field) ,allocatable  :: d2f_dx2
+    type(field) :: d2f_dx2
     integer(ikind) :: i,nx, me, east, west
     real(rkind) :: dx
     real(rkind), allocatable :: tmp_field_array(:)
@@ -192,7 +187,7 @@ module periodic_2nd_order_module
     nx=size(this%global_f)
     dx=2.*pi/(real(nx,rkind)*num_images())
 
-    allocate(d2f_dx2,tmp_field_array(nx))
+    allocate(tmp_field_array(nx))
 
     me = this_image()
 
@@ -234,12 +229,6 @@ module periodic_2nd_order_module
     logical :: zero_at_expected_location
     nearest_grid_point = minloc(abs(local_grid-expected_location),dim=1)
     zero_at_expected_location = merge(.true.,.false., abs(this%global_f(nearest_grid_point)) < tolerance  )
-  end function
-
-  function this_image_contains_midpoint() result(within_bounds)
-    logical within_bounds
-    !<-- assume mod(num_grid_pts, num_images()) == 0
-    within_bounds = merge(.true.,.false., (this_image()==num_images()/2+1) )
   end function
 
 end module

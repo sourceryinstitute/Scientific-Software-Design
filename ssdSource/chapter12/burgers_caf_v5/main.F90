@@ -45,7 +45,7 @@ program main
   use initializer ,only : u_initial,zero
   implicit none
   type(periodic_2nd_order), save :: u,half_uu,u_half
-  real(rkind) :: dt,half=0.5,t=0.,t_final=0.1,nu=1.
+  real(rkind) :: dt,half=0.5,t=0.,t_final=10.1,nu=1.
   integer ,parameter     :: grid_resolution=1024
   procedure(initial_field) ,pointer :: initial
 
@@ -69,8 +69,13 @@ program main
   end do
  !print *,'u at t=',t
   call u%output()
-  if (u%this_image_contains_midpoint()) then
+  if (this_image_contains_midpoint()) then
     if (.not. u%has_a_zero_at(expected_zero_location)) error stop "Test failed."
     print *,'Test passed.'
   end if
+contains
+  function this_image_contains_midpoint() result(within_bounds)
+    logical within_bounds
+    within_bounds = merge(.true.,.false., (this_image()==num_images()/2+1) )
+  end function
 end program

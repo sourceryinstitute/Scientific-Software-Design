@@ -31,17 +31,13 @@ module field_module
   type :: field 
     real(rkind), allocatable :: f(:)
   contains
-    procedure :: add            => total
     procedure :: subtract       => difference      
-    procedure :: multiply_field => product_
     procedure :: multiply_real  => multiple
     procedure :: assign         => assign_field_f
-    procedure :: copy           => copy_filed
     procedure :: state          => field_values
-    generic   :: operator(+)    => add
     generic   :: operator(-)    => subtract
-    generic   :: operator(*)    => multiply_real,multiply_field
-    generic   :: assignment(=)  => assign, copy
+    generic   :: operator(*)    => multiply_real
+    generic   :: assignment(=)  => assign
   end type
     
 contains
@@ -58,41 +54,17 @@ contains
     lhs%f = rhs
   end subroutine
 
-  subroutine copy_filed (lhs, rhs)
-    class(field), intent(inout) :: lhs
-    class(field), intent(in) :: rhs
-    lhs%f = rhs%f
-  end subroutine
-
-  function total(lhs,rhs)
-    class(field) ,intent(in) :: lhs
-    class(field) ,intent(in) :: rhs
-    type(field) ,allocatable :: total
-    allocate (total)
-    total%f = lhs%f + rhs%f
-  end function
-
   function difference(lhs,rhs)
     class(field) ,intent(in) :: lhs
     class(field) ,intent(in)  :: rhs
-    type(field) ,allocatable :: difference
-    allocate (difference)
+    type(field) :: difference
     difference%f = lhs%f - rhs%f
-  end function
-
-  function product_(lhs,rhs)
-    class(field) ,intent(in) :: lhs
-    class(field) ,intent(in)  :: rhs
-    type(field) ,allocatable :: product_
-    allocate(product_)
-    product_%f = lhs%f * rhs%f
   end function
 
   function multiple(lhs,rhs)
     class(field) ,intent(in) :: lhs
     real(rkind) ,intent(in)  :: rhs
-    type(field) ,allocatable :: multiple
-    allocate(multiple)
+    type(field) :: multiple
     multiple%f = lhs%f * rhs
   end function
 end module
