@@ -7,7 +7,7 @@ cray=ftn -ew -h caf
 intel=ifort -Bdynamic -coarray=shared -standard-semantics -O3 -coarray-num-images=4
 
 # TAU compiler command 
-tau_intel=tauf90 -tau:serial,icpc,pdt  -Bdynamic -coarray=shared -standard-semantics -O3 -coarray-num-images=4 -DTAU=1
+tau_intel=tauf90 -tau:serial,pdt  -Bdynamic -coarray=shared -standard-semantics -O3 -coarray-num-images=4 -DTAU=1
 
 #GNU compiler command
 gnu=gfortran -fcoarray=single
@@ -16,11 +16,11 @@ tau_aciss=tau_f90.sh -v -Bdynamic -coarray=shared -standard-semantics -O3
 #Cray Compiler on Hopper
 tau_hopper=tau_f90.sh -optCompInst -ew -h caf -g
 compile=$(intel)
-#compile=$(tau_intel)
+compile=$(tau_intel)
 # Please uncomment the # to use TAU
 
 OPTS=
-objects = field.o periodic_2nd_order.o kind_parameters.o co_object_interface.o object_interface.o math_constants.o ForTrilinos_assertion_utility.o ForTrilinos_error.o
+objects = local_field.o global_field.o kind_parameters.o co_object_interface.o object_interface.o math_constants.o ForTrilinos_assertion_utility.o ForTrilinos_error.o
 
 $(executable): main.o $(objects) Makefile
 	$(compile) $(OPTS)  main.o $(objects) -o $(executable) 
@@ -28,17 +28,18 @@ $(executable): main.o $(objects) Makefile
 main.o: main.F90 $(objects) Makefile
 	$(compile) $(OPTS) -c main.F90
 
-periodic_2nd_order.o: periodic_2nd_order.F90 field.o kind_parameters.o co_object_interface.o ForTrilinos_assertion_utility.o ForTrilinos_error.o preprocessor_definitions Makefile
-	$(compile) $(OPTS) -c periodic_2nd_order.F90
+global_field.o: global_field.F90 local_field.o kind_parameters.o co_object_interface.o ForTrilinos_assertion_utility.o ForTrilinos_error.o preprocessor_definitions Makefile
+	$(compile) $(OPTS) -c global_field.F90
 
-field.o: field.F90 kind_parameters.o math_constants.o object_interface.o ForTrilinos_assertion_utility.o ForTrilinos_error.o Makefile
-	$(compile) $(OPTS) -c field.F90
+local_field.o: local_field.F90 kind_parameters.o math_constants.o object_interface.o ForTrilinos_assertion_utility.o ForTrilinos_error.o Makefile
+	$(compile) $(OPTS) -c local_field.F90
 
 kind_parameters.o: kind_parameters.F90 Makefile
 	$(compile) $(OPTS) -c kind_parameters.F90
 
-math_constants.o: math_constants.F90 kind_parameters.o preprocessor_definitions Makefile
+math_constants.o: math_constants.F90 kind_parameters.o Makefile
 	cp $(include_path)/intel_capabilities.txt compiler_capabilities.txt
+	cp $(include_path)/intel_capabilities.txt $(library_path)/compiler_capabilities.txt
 	$(compile) $(OPTS) -c math_constants.F90
 
 object_interface.o: $(library_path)/object_interface.F90 preprocessor_definitions Makefile
@@ -55,7 +56,7 @@ ForTrilinos_error.o: $(library_path)/ForTrilinos_error.F90 Makefile
 
 .PHONY : clean
 clean :
-	-rm -f  *.o *.mod $(executable) core fort.* compiler_capabilities.txt $(library_path)/compiler_capabilities.txt profile* MULT* *.trc *.edf
+	-rm -f  *.o *.mod $(executable) core fort.* $(library_path)/compiler_capabilities.txt profile* MULT* *.trc *.edf
 
 preprocessor_definitions: 
 ifeq ($(compile),$(gnu))
