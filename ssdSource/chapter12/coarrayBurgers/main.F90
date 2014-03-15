@@ -47,14 +47,14 @@ program main
   implicit none
   type(burgers) :: exact_solution
   type(global_field), save :: u,half_uu,u_half
-  real(rkind) :: dt,t=0._rkind
+  real(rkind) :: dt
   real(rkind), parameter :: half=0.5_rkind,t_final=.1_rkind,nu=1._rkind
   real(rkind), parameter :: pi=acos(-1._rkind),expected_zero_location=pi
-  integer ,parameter     :: grid_resolution=32!1024
-  integer :: iostat
+  integer ,parameter     :: num_steps=100,grid_resolution=1024
+  integer :: iostat,step
   procedure(initial_field) ,pointer :: initial
   character(len=256) :: iomsg
-
+  logical, parameter :: performance_analysis=.true.
 
   initial => u_initial
   call u%construct(initial,grid_resolution)
@@ -62,21 +62,32 @@ program main
   call half_uu%construct(initial,grid_resolution)
   call u_half%construct(initial,grid_resolution)
 
-  do while (t<=t_final) ! 2nd-order Runge-Kutta:
-    dt = u%runge_kutta_2nd_step(nu ,grid_resolution)
-    half_uu = u*u*half
-    u_half = u + (u%xx()*nu - half_uu%x())*dt*half ! first substep
-    half_uu = u_half*u_half*half
-    u  = u + (u_half%xx()*nu - half_uu%x())*dt ! second substep
-    t = t + dt
-  end do
-  print *,'u at t=',t
+  dt = u%runge_kutta_2nd_step(nu ,grid_resolution)
+  call u%set_time(time_stamp=0._rkind)
+  if (performance_analysis) then
+    ! Integrate over a fixed number of time steps so we do a fixed number of FLOPS
+    do step=1,num_steps 
+      call runge_kutta_2nd_order_time_step
+    end do
+  else 
+    ! Integrate over the time interval [0,t_final)
+    do while (u%get_time()<=t_final) ! 2nd-order Runge-Kutta:
+      call runge_kutta_2nd_order_time_step
+    end do
+  end if
   call u%output(output_unit,'DT',[0],iostat,iomsg)
   if (this_image_contains_midpoint()) then
     if (.not. u%has_a_zero_at(expected_zero_location)) error stop "Test failed."
     print *,'Test passed.'
   end if
 contains
+  subroutine runge_kutta_2nd_order_time_step
+    half_uu = u*u*half
+    u_half = u + (u%xx()*nu - half_uu%x())*dt*half ! first substep
+    half_uu = u_half*u_half*half
+    u  = u + (u_half%xx()*nu - half_uu%x())*dt ! second substep
+    call u%set_time(u%get_time()+dt)
+  end subroutine
   function this_image_contains_midpoint() result(within_bounds)
     logical within_bounds
     within_bounds = merge(.true.,.false., (this_image()==num_images()/2+1) )
