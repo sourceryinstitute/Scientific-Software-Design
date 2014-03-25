@@ -35,16 +35,18 @@ contains
     real(rkind), intent(in) :: x(:),t
     real(rkind), dimension(size(x)) :: phi,dPhi_dx,u
     real(rkind), parameter :: two_pi=2._rkind*pi, four_pi = 4._rkind*pi
-    integer(ikind) , parameter :: n_max=100,n(-n_max:n_max)=[-n_max:n_max:1] 
     integer(ikind) :: i
+    integer(ikind) , parameter :: n_max=100,n(-n_max:n_max)=[(i,i=-n_max,n_max)] 
     ! Requires
     call assert(this%user_defined(),error_message("solve: received undefined burgers object"))
-    associate( nu=>this%diffusion, exponential=>exp(-((x(i)-two_pi*n)**2)/(4._rkind*nu*t)) )
-      do concurrent(i=1:size(x))
-        phi(i) = sum( exponential )/sqrt(four_pi*nu)
-        dPhi_dx(i) = sum( exponential*(-2._rkind*((x(i)-two_pi*n))/(4._rkind*nu*t)) )/sqrt(four_pi*nu)
-        u = -2._rkind*nu*dPhi_dx/phi
-      end do
+    associate( nu=>this%diffusion)
+      associate( exponential=>exp(-((x(i)-two_pi*n)**2)/(4._rkind*nu*t)) )
+        do concurrent(i=1:size(x))
+          phi(i) = sum( exponential )/sqrt(four_pi*nu)
+          dPhi_dx(i) = sum( exponential*(-2._rkind*((x(i)-two_pi*n))/(4._rkind*nu*t)) )/sqrt(four_pi*nu)
+          u = -2._rkind*nu*dPhi_dx/phi
+        end do
+      end associate
     end associate
   end function
 

@@ -62,8 +62,8 @@ program main
   call half_uu%construct(initial,grid_resolution)
   call u_half%construct(initial,grid_resolution)
 
+  dt = u%runge_kutta_2nd_step(nu ,grid_resolution)
   do while (t<=t_final) ! 2nd-order Runge-Kutta:
-    dt = u%runge_kutta_2nd_step(nu ,grid_resolution)
     half_uu = u*u*half
     u_half = u + (u%xx()*nu - half_uu%x())*dt*half ! first substep
     half_uu = u_half*u_half*half
