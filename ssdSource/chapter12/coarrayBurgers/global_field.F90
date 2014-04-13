@@ -93,20 +93,38 @@ contains
     end do
   end subroutine
 
+  ! This procedure was not in the textbook:
+  subroutine synchronize()
+    if (num_images()>1) then
+      associate(me=>this_image())
+        if (me==1) then
+          sync images(me+1)
+        else if (me==num_images()) then
+          sync images(me-1)
+        else 
+          sync images([me-1,me+1])
+        end if
+      end associate
+    end if
+  end subroutine
+
   subroutine construct (this, initial, num_grid_pts)
     class(global_field), intent(inout) :: this
     procedure(initial_field) ,pointer :: initial
     integer(ikind) ,intent(in) :: num_grid_pts
     integer :: i, local_grid_size
 
-    !<-- assume mod(num_grid_pts, num_images()) == 0
+    ! Requires
+    call assert(mod(num_grid_pts,num_images())==0,error_message("Number of grid points must be divisible by number of images"))
+    ! The above check was not in the textbook.
+
     local_grid_size = num_grid_pts / num_images()
 
     ! set up the global grid points
     allocate (this%global_f(local_grid_size)[*])
 
     local_grid = grid() ! This line was not in the textbook 
-    this%global_f(:) = local_grid ! The text book version directly assigns grid() to this%globa_f(:)
+    this%global_f(:) = local_grid ! The textbook version directly assigns grid() to this%global_f(:)
 
 #ifdef COMPILER_LACKS_DO_CONCURRENT
     do i = 1,local_grid_size
@@ -116,7 +134,8 @@ contains
       this%global_f(i) = initial(this%global_f(i))
     end do
 
-    sync all
+    ! In the textbook, this was a "sync all". This call invokes "sync images" to improve performance:
+    call synchronize()
     
     ! Ensures
     call this%mark_as_defined
@@ -153,7 +172,9 @@ contains
     class(global_field) ,intent(inout) :: lhs
     class(local_field) ,intent(in) :: rhs
     lhs%global_f(:) = rhs%state()
-    sync all
+
+    ! In the textbook, this was a "sync all". This call invokes "sync images" to improve performance:
+    call synchronize()
   end subroutine
 
   function add_local_field (lhs,rhs)
