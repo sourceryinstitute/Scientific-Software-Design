@@ -9,8 +9,10 @@ intel=ifort -Bdynamic -coarray=shared -standard-semantics -O3 -coarray-num-image
 #GNU compiler command
 gnu=gfortran -fcoarray=single
 #TAU compiler command
-tau=tau_f90.sh -Bdynamic -coarray=shared -standard-semantics -O3 -optCompInst 
-compile=$(gnu)
+#tau_intel=tauf90 -tau:serial,icpc,pdt  -Bdynamic -coarray=shared -standard-s    emantics -O3 -coarray-num-images=4 -DTAU=1
+tau_intel=tau_f90.sh -Bdynamic -coarray=shared -standard-semantics -O3 -optCompInst 
+tau_cray=tau_f90.sh -ew -h caf -g -optCompInst
+compile=$(tau_cray)
 
 OPTS=
 objects = local_field.o global_field.o kind_parameters.o co_object_interface.o object_interface.o ForTrilinos_assertion_utility.o ForTrilinos_error.o math_constants.o burgers.o
@@ -64,6 +66,16 @@ else
     ifeq ($(compile),$(cray))
 	cp $(include_root)/cray_capabilities.txt compiler_capabilities.txt
 	cp $(include_root)/cray_capabilities.txt $(library_root)/compiler_capabilities.txt
+  else
+    ifeq ($(compile),$(tau_cray))
+	cp $(include_root)/tau_cray_capabilities.txt compiler_capabilities.txt
+	cp $(include_root)/tau_cray_capabilities.txt $(library_root)/compiler_capabilities.txt
+  else
+    ifeq ($(compile),$(tau_intel))
+	cp $(include_root)/tau_intel_capabilities.txt compiler_capabilities.txt
+	cp $(include_root)/tau_intel_capabilities.txt $(library_root)/compiler_capabilities.txt
     endif
+  endif
+  endif
   endif
 endif

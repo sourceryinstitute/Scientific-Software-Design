@@ -56,10 +56,12 @@ program main
   character(len=256) :: iomsg
   logical, parameter :: performance_analysis=.true.
 
-#ifdef TAU
   ! Starting TAU 
-  !call TAU_PROFILE_SET_NODE(this_image())  !ACISS
-  call TAU_PROFILE_SET_NODE(this_image()-1) !Hopper 
+#ifdef TAU_INTEL
+  call TAU_PROFILE_SET_NODE(this_image())  !Intel coarray implementation
+#endif
+#ifdef TAU_CRAY
+  call TAU_PROFILE_SET_NODE(this_image()-1) !Cray coarray implementation
 #endif
 
   initial => u_initial
