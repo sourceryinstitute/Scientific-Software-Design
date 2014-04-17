@@ -9,7 +9,7 @@ module unload darshan
 module swap PrgEnv-pgi PrgEnv-cray
 module load java/1.6.0_13
 export PATH=/global/homes/s/sameer/pkgs/tau-2.22.2b1/craycnl/bin:$PATH
-export TAU_MAKEFILE=/global/homes/s/sameer/pkgs/tau-2.22.2b1/craycnl/lib/Makefile.tau-cray-pdt
+export TAU_MAKEFILE=/global/u1/s/sameer/pkgs/tau-2.23/craycnl/lib/Makefile.tau-cray-cce822-mpi-pdt
 export TAU_COMM_MATRIX=1
 export PATH=/global/homes/s/sameer/tau2/craycnl/binutils-2.23.1/bin:$PATH
 #export PATH=/global/homes/s/sameer/tau2/craycnl/bin:$PATH
