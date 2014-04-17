@@ -50,7 +50,7 @@ program main
   real(rkind) :: dt
   real(rkind), parameter :: half=0.5_rkind,t_final=.1_rkind,nu=1._rkind
   real(rkind), parameter :: pi=acos(-1._rkind),expected_zero_location=pi
-  integer ,parameter     :: num_steps=100,grid_resolution=1024
+  integer ,parameter     :: num_steps=100,grid_resolution=6144
   integer :: iostat,step
   procedure(initial_field) ,pointer :: initial
   character(len=256) :: iomsg
