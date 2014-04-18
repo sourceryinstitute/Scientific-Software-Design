@@ -12,7 +12,7 @@ gnu=gfortran -fcoarray=single
 #tau_intel=tauf90 -tau:serial,icpc,pdt  -Bdynamic -coarray=shared -standard-s    emantics -O3 -coarray-num-images=4 -DTAU=1
 tau_intel=tau_f90.sh -Bdynamic -coarray=shared -standard-semantics -O3 -optCompInst 
 tau_cray=tau_f90.sh -ew -h caf -optCompInst
-compile=$(tau_cray)
+compile=$(intel)
 
 OPTS=
 objects = local_field.o global_field.o kind_parameters.o co_object_interface.o object_interface.o ForTrilinos_assertion_utility.o ForTrilinos_error.o math_constants.o burgers.o
@@ -52,7 +52,7 @@ ForTrilinos_error.o: $(library_root)/ForTrilinos_error.F90 Makefile
 
 .PHONY : clean
 clean :
-	-rm -f  *.o *.mod $(executable) core fort.* compiler_capabilities.txt $(library_root)/compiler_capabilities.txt
+	-rm -f  *.o *.mod $(executable) core fort.* compiler_capabilities.txt $(library_root)/compiler_capabilities.txt profile* MULT* *.trc *.edf
 
 preprocessor_definitions: 
 ifeq ($(compile),$(gnu))

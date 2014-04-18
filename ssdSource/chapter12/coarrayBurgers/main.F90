@@ -41,16 +41,14 @@ program main
   use kind_parameters ,only : rkind
   use global_field_module, only : global_field, initial_field
   use initializer ,only : u_initial,zero
-  use burgers_module, only : burgers
   use iso_fortran_env, only : output_unit
 
   implicit none
-  type(burgers) :: exact_solution
   type(global_field), save :: u,half_uu,u_half
   real(rkind) :: dt
   real(rkind), parameter :: half=0.5_rkind,t_final=.1_rkind,nu=1._rkind
   real(rkind), parameter :: pi=acos(-1._rkind),expected_zero_location=pi
-  integer ,parameter     :: num_steps=100,grid_resolution=6144
+  integer ,parameter     :: num_steps=100,grid_resolution=1024
   integer :: iostat,step
   procedure(initial_field) ,pointer :: initial
   character(len=256) :: iomsg
