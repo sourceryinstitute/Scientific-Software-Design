@@ -45,18 +45,9 @@ module ForTrilinos_assertion_utility
   !> @endcond
   public :: error_message,assert,assert_identical
 
-!> @cond Do not show max_string_length
-#ifdef ForTrilinos_DISABLE_DEFERRED_LENGTH_CHARACTERS
-  integer ,parameter :: max_string_length=256
-#endif /* ForTrilinos_DISABLE_DEFERRED_LENGTH_CHARACTERS */
-!> @endcond
   type error_message
     private
-#ifdef ForTrilinos_DISABLE_DEFERRED_LENGTH_CHARACTERS
-    character(len=max_string_length) :: string ! gfortran 4.7.0 workaround
-#else
     character(:) ,allocatable :: string
-#endif /* ForTrilinos_DISABLE_DEFERRED_LENGTH_CHARACTERS */
     integer, allocatable :: idata(:)
     real, allocatable :: rdata(:)
     complex, allocatable :: cdata(:)
@@ -107,15 +98,11 @@ contains
     character(len=132) io_message
     if (.not. assertion) then
       write(error_unit,fmt='(31a)',advance="no") 'Assertion failed with message: '
-#ifndef ForTrilinos_DISABLE_DEFERRED_LENGTH_CHARACTERS
       if (allocated(message%string)) then
-#endif
         write(error_unit,*) message%string
-#ifndef ForTrilinos_DISABLE_DEFERRED_LENGTH_CHARACTERS
       else
         write(error_unit,*) '(no message provided).'
       end if
-#endif
       if (allocated(message%idata)) write(error_unit,*) 'Integer test data: ',message%idata
       if (allocated(message%rdata)) write(error_unit,*) 'Real test data: ',message%rdata
       if (allocated(message%odata)) then
