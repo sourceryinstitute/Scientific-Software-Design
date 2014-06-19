@@ -1,15 +1,1 @@
-#Specify which Fortran code examples the chosen compiler is capable of building:
-if (${ALL_EXAMPLES_ENABLED})
-  add_executable(superfluid main.F90 vortex.F90 hermetic.F90 )
-elseif ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "VisualAge|XL|NAG|Cray|Intel")
-  add_executable(superfluid main.F90 vortex.F90 hermetic.F90 )
-elseif ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "GNU")
-  message("\n*** As of GCC version 4.8.1, gfortran does not yet support final subroutines. ***")
-  message(  "*** Skipping build of the code in the chapter05/hermetic subdirectory.        ***")
-  message(  "*** Note: Partial support for final subroutines will appear in gfortran 4.9 . ***")
-  message(  "*** To attempt to compile the disabled code, use the Makefile included in     ***")
-  message(  "*** the aforementioned directory.                                             ***\n")
-else()
-  #Build everything by default.
-  add_executable(superfluid main.F90 vortex.F90 hermetic.F90 )
-endif()
+add_executable(superfluid main.F90 vortex.F90 hermetic.F90 )
