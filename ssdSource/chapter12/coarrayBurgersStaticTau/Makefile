@@ -16,7 +16,6 @@ tau_aciss=tau_f90.sh -v -Bdynamic -coarray=shared -standard-semantics -O3
 #Cray Compiler on Hopper
 tau_hopper=tau_f90.sh -optCompInst -ew -h caf -g
 compile=$(intel)
-#compile=$(tau_intel)
 # Please uncomment the # to use TAU
 
 OPTS=

@@ -41,11 +41,9 @@ program main
   use kind_parameters ,only : rkind
   use global_field_module, only : global_field, initial_field
   use initializer ,only : u_initial,zero
-  use burgers_module, only : burgers
   use iso_fortran_env, only : output_unit
 
   implicit none
-  type(burgers) :: exact_solution
   type(global_field), save :: u,half_uu,u_half
   real(rkind) :: dt
   real(rkind), parameter :: half=0.5_rkind,t_final=.1_rkind,nu=1._rkind
@@ -55,6 +53,14 @@ program main
   procedure(initial_field) ,pointer :: initial
   character(len=256) :: iomsg
   logical, parameter :: performance_analysis=.true.
+
+  ! Starting TAU 
+#ifdef TAU_INTEL
+  call TAU_PROFILE_SET_NODE(this_image())  !Intel coarray implementation
+#endif
+#ifdef TAU_CRAY
+  call TAU_PROFILE_SET_NODE(this_image()-1) !Cray coarray implementation
+#endif
 
   initial => u_initial
   call u%construct(initial,grid_resolution)
