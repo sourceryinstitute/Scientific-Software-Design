@@ -223,11 +223,13 @@ contains
   subroutine copy(lhs,rhs)
     class(global_field) ,intent(inout) :: lhs
     class(local_field) ,intent(in) :: rhs
+
 #ifdef TAU
     call TAU_START('global_field%copy')
 #endif
+    ! This synchronizaiton was missing in the textbook:
+    call synchronize()
     lhs%global_f(:) = rhs%state()
-
     ! In the textbook, this was a "sync all". This call invokes "sync images" to improve performance:
     call synchronize()
 #ifdef TAU
