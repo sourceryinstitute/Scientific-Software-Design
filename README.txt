@@ -3,12 +3,12 @@ The Scientific Software Design Repository
 
 Overview
 --------
-This repository contains modern Fortran codes first published in the textbook 
+This repository contains modern Fortran  and C++ codes first published in the textbook 
 Scientific Software Design: The Object-Oriented Way by Damian Rouson, Jim Xia, and
 Xiaofeng Xu (Cambridge University Press, 2011).  Updated versions of this repository
 can be obtained via git as follows:
 
-  git clone https://your-user-name@bitbucket.org/rouson/scientific-software-design.git
+  git clone https://your-user-name@bitbucket.org/sourceryinstitute/scientific-software-design.git
 
 A less-frequently updated version of this code archive also resides at 
 http://wwww.cambridge.org/Rouson via the "Resources" link.
@@ -78,26 +78,13 @@ features employed in this code archive:
   3. Portland Group (pgfortran),
   4. Numerical Algorithms Group (nagfor)
   5. Intel (ifort)
-  6. GNU (gfortran)*
+  6. GNU (gfortran)
 Most compilers not listed above do not support a sufficient number of Fortran 2003
 features to compile most code in the book.  If your compiler is listed above but you
 are unable to compile the code in ssdSource, please update to the latest version of
-your compiler and retry before reporting the bug to rouson@stanford.edu.
+your compiler and retry before reporting the bug to damian@sourceryinstitute.org.
 
-The Cray and Intel compilers fully support the Fortran 2008 parallel programming 
-features needed to build the coarray example in Chapter 12.  Also, the GNU Fortran
-compiler version 4.9 (pre-release at the time of this writing) supports the coarray
-syntax and can produce a single-image executable withi the -fcoarray=single flag.
-We encourage users interested in having multi-image (parallel) support in gfortran
-to consider contributing to the open-source gfortran project in the form of
-development time, test codes, or funding.  Please email rouson@stanford.edu if you 
-are interested in assisting.
-
-*The only features used in this book that are not supported by GNU Fortran 4.9 
-relate to the following two gfortran bugs:
-1. Bug 47545: This prevents compiling with deferred-length components. A workaround 
-   is provided in chapter02/figure2.4/gfortran_oo_hello_world.F90.
-2. Bug 45170 (comment 9): This presumably precludes returning character variables 
-   with allocatable lengths.
-The CMake scripts will disable the compilation of the offending codes when building 
-with gfortran.
+Additionally, the Cray and Intel compilers and the GNU 5.0 compiler fully support the 
+Fortran 2008 parallel programming features needed to build the coarray example in 
+Chapter 12.  Producing parallel executables with GNU Fortran requires building and
+linking to an OpenCoarrays (http://opencoarrays.org) transport layer.

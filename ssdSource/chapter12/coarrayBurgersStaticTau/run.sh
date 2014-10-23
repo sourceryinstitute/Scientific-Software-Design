@@ -1,5 +1,7 @@
 #!/bin/sh
 echo "Building the code:"
+export TAU_MAKEFILE=/opt/paratools/tau/x86_64/lib/Makefile.tau-mpi-pdt
+export TAU_OPTIONS="-optVerbose -optRevert -optNoCompInst"
 make clean
 make -f Makefile.inst
 
@@ -9,7 +11,7 @@ export TAU_CALLPATH_DEPTH=100
 #export TAU_SAMPLING=1
 
 echo "Running the code:"
-./burgers_static_caf
+mpirun -np 4 ./burgers_static_caf
 
 echo "Running the pprof command:"
 pprof
