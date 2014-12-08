@@ -85,7 +85,7 @@ program main
     t = t + dt
   end do
   sync all; call CPU_TIME(t3); sync all
-  !call u%output(base_output_unit+this_image(),iotype,v_list,iostat,iomsg)
+  call u%output(base_output_unit+this_image(),iotype,v_list,iostat,iomsg)
   sync all; call CPU_TIME(t4); sync all
   if (u%this_image_contains(expected_zero_location)) then
     if (.not. u%has_a_zero_at(expected_zero_location)) error stop "Test failed."

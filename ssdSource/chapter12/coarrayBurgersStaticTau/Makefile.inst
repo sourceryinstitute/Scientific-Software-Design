@@ -4,7 +4,7 @@ executable= burgers_static_caf
 
 # TAU compiler command 
 #compile=tauf90 -tau:serial,pdt  -O3 -fcoarray=lib -DTAU=1
-compile=tau_f90.sh -O3 -fcoarray=lib -DTAU=1
+compile=tau_f90.sh -O3 -g -fcoarray=lib -DTAU=1
 
 OPTS=-L/opt/opencoarrays/lib
 objects = field.o periodic_2nd_order.o kind_parameters.o co_object_interface.o object_interface.o math_constants.o ForTrilinos_assertion_utility.o ForTrilinos_error.o

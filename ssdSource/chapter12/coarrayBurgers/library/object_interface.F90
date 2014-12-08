@@ -4,9 +4,9 @@ module object_interface
   private
   public :: object
 
-  ! Define an abstract base class to ensure basic functionality expected to be provided by all concrete Morfeus classes.
-  ! Each concrete class provides the functionality by extending this class and implementing its deferred binding(s).  This
-  ! class resembles java's Object class in the sense that it is intended to be the ultimate ancester of every other class.
+  ! Define an abstract parent type to ensure basic functionality expected to be provided by all non-abstract types.
+  ! Each non-abstract type provides the functionality by extending this type and implementing its deferred binding(s).  This
+  ! type resembles java's Object class in the sense that it is intended to be the ultimate ancester of every other type.
   type, abstract :: object
     private
     logical :: defined=.false. ! Mark all objects as not-yet user-defined by default
