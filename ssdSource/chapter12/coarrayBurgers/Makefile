@@ -9,10 +9,10 @@ include_path=./include-files
 
 ifeq ($(compiler),gnu)
 # Use these two lines to compile code that runs in a single image
-  lib=-lcaf_single
-  compile=gfortran -fcoarray=single
-# lib=-lcaf_mpi
-# compile=mpif90 -fcoarray=lib
+# lib=-lcaf_single
+# compile=gfortran -fcoarray=single
+  lib=-lcaf_mpi
+  compile=mpif90 -fcoarray=lib
   ifeq ($(machine),virtual)
     opt=-L /opt/opencoarrays/lib
   else
