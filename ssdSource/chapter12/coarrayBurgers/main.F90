@@ -7,7 +7,7 @@ program main
   type(global_field) :: u,u_half,half_uu
   real(real64), parameter :: nu=1.,final_time=0.6_real64,tolerance=1.E-3_real64,safety_factor=0.1_real64
   real(real64) :: time=0.,dt,dx
-  integer(int64), parameter :: nodes=256
+  integer(int64), parameter :: nodes=16
   procedure(initial_condition), pointer :: initial_u=>ten_sin
 
 #ifdef TAU
@@ -17,12 +17,6 @@ program main
   call TAU_PROFILE_SET_NODE(this_image())   ! Start TAU (Intel compiler)
 #endif
 #endif
-
-  if (index(compiler_version(),"GCC")/=0) then
-    if (index(compiler_options(),"-fcoarray=lib")/=0 .and. num_images()==1) then
-      error stop "For single-image runs, recompile with -fcoarray=single to work around a GFortran/OpenCoarrays bug" 
-    end if
-  end if
 
   call u%set(initial_u,num_points=nodes)
   dx = u%grid_spacing()
@@ -53,10 +47,8 @@ contains
     logical :: is_sinusoid
     real(real64), parameter :: threshold=-0.001,cap=0.001
     real(real64), allocatable :: u_xx_state(:)
-    integer :: size_u_xx
     u_xx = u_solution%xx()
     u_xx_state = u_xx%state()
-    size_u_xx = size(u_xx_state)
     if (num_images()/=1) then
       ! Ensure that the global midpoint is a local endpoint for whatever image contains the midpoint:
       call assert(mod(num_images(),2)==0,error_message("Test failed: uneven number of images."))
@@ -67,8 +59,12 @@ contains
         call assert(all(u_xx_state>threshold),error_message("Test failed: left half not concave down."))
       end if
     else
-      call assert(all(u_xx_state(1:size_u_xx/2)<cap),error_message("Test failed: left half not concave down."))
-      call assert(all(u_xx_state(size_u_xx/2+1:size_u_xx)>threshold),error_message("Test failed: right half not concave up."))
+      block
+        integer :: size_u_xx
+        size_u_xx = size(u_xx_state)
+        call assert(all(u_xx_state(1:size_u_xx/2)<cap),error_message("Test failed: left half not concave down."))
+        call assert(all(u_xx_state(size_u_xx/2+1:size_u_xx)>threshold),error_message("Test failed: right half not concave up."))
+      end block
     end if
     is_sinusoid=.true.
   end function
