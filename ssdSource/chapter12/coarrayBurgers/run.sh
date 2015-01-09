@@ -15,7 +15,7 @@ do
   echo "Running the code:"
   mpirun -np ${i} ./burgers
   paraprof --pack ${i}p.ppk
-  taudb_loadtrial -a fireworks -x experiment -n ${i} ${i}p.ppk
+  taudb_loadtrial -a burgers -x test -n ${i} ${i}p.ppk
 done
 
 echo "Running the pprof command:"
