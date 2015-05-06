@@ -38,6 +38,30 @@ module global_field_module
   integer(int64), parameter:: num_end_points=2_int64
   real(real64) :: boundary_vals(num_end_points)
 
+#ifdef TAU
+  interface
+   pure subroutine tau_pure_start(x)
+     character(len=*), intent(in):: x
+   end subroutine tau_pure_start
+   pure subroutine tau_pure_stop(x)
+     character(len=*), intent(in):: x
+   end subroutine tau_pure_stop
+  end interface
+#endif
+
+! The tau_pure_start and tau_pure_stop procedures start and stop timers for code segments inside pure procedures.
+! Usage:
+! 
+!#ifdef TAU
+!    call TAU_START('insert_a_name_for_the_timer_here')
+!#endif
+!
+!    insert code to be timed here
+!
+!#ifdef TAU
+!    call TAU_STOP('insert_a_name_for_the_timer_here')
+!#endif
+
 contains
 
   function grid_spacing() result(delta_x)

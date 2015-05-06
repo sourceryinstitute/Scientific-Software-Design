@@ -12,7 +12,7 @@ ifeq ($(compiler),gnu)
 # lib=-lcaf_single
 # compile=gfortran -fcoarray=single
   lib=-lcaf_mpi
-  compile=mpif90 -fcoarray=lib
+  compile=mpifort -fcoarray=lib
   ifeq ($(machine),virtual)
     opt=-L /opt/opencoarrays/lib
   else
