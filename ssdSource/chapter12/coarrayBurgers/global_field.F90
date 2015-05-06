@@ -80,15 +80,12 @@ contains
   end function
 
   subroutine synchronize()
+    integer :: left_neighbor,right_neighbor
     if (num_images()>1) then
-      associate(me=>this_image())
-        if (me==1) then
-          sync images(me+1)
-        else if (me==num_images()) then
-          sync images(me-1)
-        else 
-          sync images([me-1,me+1])
-        end if
+      associate(me=>this_image(),first_image=>1,last_image=>num_images())
+        left_neighbor = merge(last_image,me-1,me==first_image)
+        right_neighbor = merge(first_image,me+1,me==last_image)
+        sync images([left_neighbor,right_neighbor])
       end associate
     end if
   end subroutine
