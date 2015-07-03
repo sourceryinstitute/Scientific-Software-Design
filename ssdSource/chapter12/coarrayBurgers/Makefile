@@ -1,49 +1,53 @@
 # Choose desired platform (options: virtual, cees):
 machine=virtual
-# Choose desired compiler (options: gnu, intel, cray, pg, ibm, nag, tau_intel, tau_aciss, tau_cray):
-compiler=gnu
+# Choose desired compiler (options: caf, gnu, intel, cray, pg, ibm, nag, tau_intel, tau_aciss, tau_cray):
+compiler=caf
 
 executable=burgers
 library_path=./library
 include_path=./include-files
 
-ifeq ($(compiler),gnu)
-# Use these two lines to compile code that runs in a single image
-# lib=-lcaf_single
-# compile=gfortran -fcoarray=single
-  lib=-lcaf_mpi
-  compile=mpifort -fcoarray=lib
-  ifeq ($(machine),virtual)
-    opt=-L /opt/opencoarrays/lib
-  else
-    ifeq ($(machine),cees)
-    opt=-L /opt/opencoarrays-src/mpi
-    endif
-  endif
+ifeq ($(compiler),caf)
+  compile=caf
 else
-  ifeq ($(compiler),intel)
-    compile=ifort -standard-semantics -O3 
-  else
-    ifeq ($(compiler),cray)
-      compile=ftn -ew 
+  ifeq ($(compiler),gnu)
+    # Use these two lines to compile code that runs in a single image
+    # lib=-lcaf_single
+    # compile=gfortran -fcoarray=single
+    lib=-lcaf_mpi
+    compile=mpifort -fcoarray=lib
+    ifeq ($(machine),virtual)
+      opt=-L /opt/opencoarrays/lib
     else
-      ifeq ($(compiler),tau_intel)
-        compile=tauF90 -tau:serial,icpc,pdt  -standard-semantics -O3 -DTAU=1
+      ifeq ($(machine),cees)
+      opt=-L /opt/opencoarrays-src/mpi
+      endif
+    endif
+  else
+    ifeq ($(compiler),intel)
+      compile=ifort -standard-semantics -O3 
+    else
+      ifeq ($(compiler),cray)
+        compile=ftn -ew 
       else
-        ifeq ($(compiler),tau_aciss)
-          compile=tau_F90.sh -standard-semantics -O3
+        ifeq ($(compiler),tau_intel)
+          compile=tauF90 -tau:serial,icpc,pdt  -standard-semantics -O3 -DTAU=1
         else
-          ifeq ($(compiler),tau_cray)
-            compile=tau_F90.sh -optCompInst -ew 
+          ifeq ($(compiler),tau_aciss)
+            compile=tau_F90.sh -standard-semantics -O3
           else
-            ifeq ($(compiler),pg)
-              compile=pgfortran -Mallocatable=03
+            ifeq ($(compiler),tau_cray)
+              compile=tau_F90.sh -optCompInst -ew 
             else
-              ifeq ($(compiler),ibm)
-                compile=xlf2003
+              ifeq ($(compiler),pg)
+                compile=pgfortran -Mallocatable=03
               else
-                ifeq ($(compiler),nag)
-                  compile=nagfor -f2008 -fpp -C=all
+                ifeq ($(compiler),ibm)
+                  compile=xlf2003
+                else
+                  ifeq ($(compiler),nag)
+                    compile=nagfor -f2008 -fpp -C=all
+                  endif
                 endif
               endif
             endif
@@ -52,8 +56,7 @@ else
       endif
     endif
   endif
-endif
-
+endif  
 objects = local_field.o global_field.o co_object_interface.o object_interface.o ForTrilinos_assertion_utility.o ForTrilinos_error.o 
 
 $(executable): main.o $(objects) Makefile
@@ -85,14 +88,18 @@ clean :
 	-rm -f  *.o *.mod $(executable) core fort.* compiler_capabilities.txt $(library_path)/compiler_capabilities.txt profile.* *.ppk 
 
 preprocessor_definitions: 
-ifeq ($(compiler),gnu)
+ifeq ($(compiler),caf)
 	cp $(include_path)/gfortran_capabilities.txt $(library_path)/compiler_capabilities.txt
 else
-  ifeq ($(compiler),intel)
-	cp $(include_path)/intel_capabilities.txt $(library_path)/compiler_capabilities.txt
+  ifeq ($(compiler),gnu)
+	cp $(include_path)/gfortran_capabilities.txt $(library_path)/compiler_capabilities.txt
   else
-    ifeq ($(compiler),cray)
+    ifeq ($(compiler),intel)
+	cp $(include_path)/intel_capabilities.txt $(library_path)/compiler_capabilities.txt
+    else
+      ifeq ($(compiler),cray)
 	cp $(include_path)/cray_capabilities.txt $(library_path)/compiler_capabilities.txt
+      endif
     endif
   endif
 endif
