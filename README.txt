@@ -8,7 +8,7 @@ Scientific Software Design: The Object-Oriented Way by Damian Rouson, Jim Xia, a
 Xiaofeng Xu (Cambridge University Press, 2011).  Updated versions of this repository
 can be obtained via git as follows:
 
-  git clone https://your-user-name@bitbucket.org/sourceryinstitute/scientific-software-design.git
+  git clone https://github.com/sourceryinstitute/Scientific-Software-Design.git
 
 A less-frequently updated version of this code archive also resides at 
 http://wwww.cambridge.org/Rouson via the "Resources" link.
@@ -28,7 +28,7 @@ Building
 --------
 If you are building inside the HPCLinux distribution available at 
 http://www.hpclinux.org, please enter the command "source ./intel.sh" inside the
-scientific-software-design directory before continuing.
+Scientific-Software-Design directory before continuing.
 
 The preferred method for compiling the code in this repository relies upon the 
 automated, open-source CMake build system.  CMake is available for multiple operating
