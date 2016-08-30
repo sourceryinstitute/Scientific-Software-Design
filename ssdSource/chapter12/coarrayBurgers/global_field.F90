@@ -85,7 +85,11 @@ contains
       associate(me=>this_image(),first_image=>1,last_image=>num_images())
         left_neighbor = merge(last_image,me-1,me==first_image)
         right_neighbor = merge(first_image,me+1,me==last_image)
-        sync images([left_neighbor,right_neighbor])
+        if (left_neighbor==right_neighbor) then ! occurs if num_images()==2
+          sync images([left_neighbor])
+        else
+          sync images([left_neighbor,right_neighbor])
+        end if
       end associate
     end if
   end subroutine
