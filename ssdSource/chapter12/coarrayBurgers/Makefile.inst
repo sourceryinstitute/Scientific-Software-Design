@@ -20,7 +20,7 @@ ifeq ($(compiler),gnu)
   endif
 else
   ifeq ($(compiler),tau_gnu)
-    compile=tau_f90.sh -L/opt/opencoarrays/lib -fcoarray=lib -DTAU=1 -O3 -g
+    compile=tau_f90.sh -L/opt/opencoarrays/1.7.2/gnu/7.0.0/lib -fcoarray=lib -DTAU=1 -O3 -g
     lib=-lcaf_mpi
     libpath=
   else
