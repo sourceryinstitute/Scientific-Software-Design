@@ -28,7 +28,7 @@ succinct title.
 
 - Fortran Compiler: <!-- vendor & version number-->
 - C compiler used for building lib: <!-- vendor & version -->
-- Installation method: <!-- `install.sh`, or package manager etc. -->
+- Build steps: <!-- e.g., `mkdir -p build && cd build && cmake ../ssdSource` -->
 - Output of `uname -a`:
 - MPI library being used: <!-- e.g., MPICH 3.2 -->
 - Machine architecture and number of physical cores:
