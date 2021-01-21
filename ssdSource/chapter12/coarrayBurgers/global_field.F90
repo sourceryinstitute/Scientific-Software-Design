@@ -18,7 +18,7 @@ module global_field_module
     procedure, nopass :: grid_spacing
     procedure, private :: assign_local_field
     procedure, private :: add_local_field
-    procedure, private :: multiply 
+    procedure, private :: multiply
     generic :: operator(*) => multiply
     generic :: operator(+) => add_local_field
     generic :: assignment(=) => assign_local_field
@@ -51,7 +51,7 @@ module global_field_module
 
 ! The tau_pure_start and tau_pure_stop procedures start and stop timers for code segments inside pure procedures.
 ! Usage:
-! 
+!
 !#ifdef TAU
 !    call TAU_START('insert_a_name_for_the_timer_here')
 !#endif
@@ -74,7 +74,7 @@ contains
     class(global_field), intent(in) :: this
     real(real64), allocatable :: local_values(:)
     ! Requires
-    if (this%user_defined()) then 
+    if (this%user_defined()) then
       local_values = this%values
     end if
   end function
