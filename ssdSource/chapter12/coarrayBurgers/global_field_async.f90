@@ -6,18 +6,18 @@ module global_field_module
   implicit none
   private
   public :: global_field,initial_condition
-  
+
   enum, bind(C)
     !! enumerated boundaries
-    enumerator left_boundary,right_boundary 
+    enumerator left_boundary,right_boundary
   end enum
-  
+
   type(event_type) :: ready_x(left_boundary:right_boundary)[*]
-  type(event_type) :: ready_xx(left_boundary:right_boundary)[*] 
-    
+  type(event_type) :: ready_xx(left_boundary:right_boundary)[*]
+
   integer :: previous_count_x(left_boundary:right_boundary)[*]
   integer :: previous_count_xx(left_boundary:right_boundary)[*]
-  
+
   type, extends(co_object) :: global_field
     private
     real(real64), allocatable :: values(:)[:]
@@ -29,13 +29,13 @@ module global_field_module
     procedure, nopass :: grid_spacing
     procedure, private :: assign_local_field
     procedure, private :: add_local_field
-    procedure, private :: multiply 
+    procedure, private :: multiply
     generic :: operator(*) => multiply
     generic :: operator(+) => add_local_field
     generic :: assignment(=) => assign_local_field
     procedure :: output
   end type
-  
+
   abstract interface
     pure function initial_condition(x) result(initial_values)
       import :: real64
@@ -43,10 +43,10 @@ module global_field_module
       real(real64) :: initial_values
     end function
   end interface
-  
+
   real(real64), allocatable :: dx
   integer(int64), allocatable :: num_global_points,num_local_points
-   
+
 contains
 
   function grid_spacing() result(delta_x)
@@ -54,16 +54,16 @@ contains
     call assert(allocated(dx),error_message("global_field%grid_spacing: dx not allocated"))
     delta_x = dx
   end function
-  
+
   pure function state(this) result(local_values)
     class(global_field), intent(in) :: this
     real(real64), allocatable :: local_values(:)
     ! Requires
-    if (this%user_defined()) then 
+    if (this%user_defined()) then
       local_values = this%values
     end if
   end function
-  
+
   subroutine synchronize()
     integer :: left_neighbor,right_neighbor
     if (num_images()>1) then
@@ -78,7 +78,7 @@ contains
       end associate
     end if
   end subroutine
-  
+
   ! TODO : Parallelize this. Not much speedup since done only once
   subroutine set(this,initial_function,num_points)
     class(global_field), intent(inout) :: this
@@ -109,7 +109,7 @@ contains
     call assert(allocated(num_global_points),error_message("global_field%set: num_global_points has not been allocated"))
     call assert(allocated(num_local_points),error_message("global_field%set: num_local_points has not been allocated"))
   end subroutine
-  
+
   subroutine assign_local_field(lhs,rhs)
     class(global_field), intent(inout) :: lhs
     class(local_field), intent(in) :: rhs
@@ -123,7 +123,7 @@ contains
     ! Ensures
     call lhs%mark_as_defined
   end subroutine
-  
+
   pure function add_local_field(lhs,rhs) result(total)
     class(global_field), intent(in) :: lhs
     type(local_field), intent(in) :: rhs
@@ -144,7 +144,7 @@ contains
       call product_%mark_as_defined
     end if
   end function
-  
+
   ! Functions using events cannot be pure as post statement exists inside
   ! Error stop instead of assert used as impure function cannot be inside
   ! do concurrent(boundary) block
@@ -153,37 +153,37 @@ contains
     type(local_field) :: this_x
     real(real64) :: local_this_x(num_local_points)
     integer(int64) :: i,left_neighbor,right_neighbor
-   
+
     ! Requires
     if (this%user_defined() .and. allocated(dx) .and. allocated(num_local_points)) then
       associate(N=>num_local_points,me=>this_image(),ni=>num_images())
-      
+
       do concurrent(i=2:N-1)
         local_this_x(i)=(this%values(i+1)-this%values(i-1))/(2._real64*dx)
       end do
-      
+
       left_neighbor = merge(ni,me-1,me==1)
       right_neighbor = merge(1,me+1,me==num_images())
-      
-      event post (ready_x(left_boundary)[left_neighbor] )  
+
+      event post (ready_x(left_boundary)[left_neighbor] )
       event post (ready_x(right_boundary)[right_neighbor] )
-  
+
       spin_query_work : block
         integer :: event_count(left_boundary:right_boundary),boundary
-        logical :: received(left_boundary:right_boundary) 
-        
-        event_count = 0 
-        
+        logical :: received(left_boundary:right_boundary)
+
+        event_count = 0
+
         received = .false.
         spin: do while( any(.not. received) )
-        
+
         query: do concurrent(boundary=left_boundary:right_boundary)
           !! loop over each boundary
           if (.not. received(boundary)) then
             call event_query(ready_x(boundary),event_count(boundary))
             work: select case(event_count(boundary) - previous_count_x(boundary))
-              case(0) ! no new events posted                  
-              case(1) ! one new event posted                  
+              case(0) ! no new events posted
+              case(1) ! one new event posted
                 select case(boundary)
                   case(left_boundary)
                     local_this_x(1) = (this%values(2)-this%values(N)[left_neighbor])/(2._real64*dx)
@@ -191,7 +191,7 @@ contains
                     local_this_x(N)=(this%values(1)[right_neighbor]-this%values(N-1))/(2._real64*dx)
                   case default
                     error stop "global_field%x: invalid boundary"
-                end select 
+                end select
                 previous_count_x(boundary) = event_count(boundary)
                 received(boundary) = .true.
               case default
@@ -200,78 +200,78 @@ contains
             end if
           end do query
         end do spin
-      end block spin_query_work  
-    
+      end block spin_query_work
+
       this_x = local_this_x
       end associate
-      
+
       ! Ensures
       call this_x%mark_as_defined
-    end if    
+    end if
   end function
-  
+
   function xx(this) result(this_xx)
     class(global_field), intent(in) :: this
     type(local_field) :: this_xx
     real(real64) :: local_this_xx(num_local_points)
     integer(int64) :: i,left_neighbor,right_neighbor
-   
+
     ! Requires
     if (this%user_defined() .and. allocated(dx) .and. allocated(num_local_points)) then
       associate(N=>num_local_points,me=>this_image(),ni=>num_images())
-      
+
       do concurrent(i=2:N-1)
         local_this_xx(i)=(this%values(i+1)-2._real64*this%values(i)+this%values(i-1))/dx**2
       end do
-      
+
       left_neighbor = merge(ni,me-1,me==1)
       right_neighbor = merge(1,me+1,me==ni)
-      
-      event post (ready_xx(left_boundary)[left_neighbor] )  
+
+      event post (ready_xx(left_boundary)[left_neighbor] )
       event post (ready_xx(right_boundary)[right_neighbor] )
-  
+
       spin_query_work : block
         integer :: event_count(left_boundary:right_boundary),boundary
-        logical :: received(left_boundary:right_boundary) 
-        
-        event_count = 0 
-        
+        logical :: received(left_boundary:right_boundary)
+
+        event_count = 0
+
         received = .false.
         spin: do while( any(.not. received) )
-        
+
         query: do concurrent(boundary=left_boundary:right_boundary)
           !! loop over each boundary
           if (.not. received(boundary)) then
             call event_query(ready_xx(boundary),event_count(boundary))
             work: select case(event_count(boundary) - previous_count_xx(boundary))
-              case(0) ! no new events posted                  
-              case(1) ! one new event posted                  
+              case(0) ! no new events posted
+              case(1) ! one new event posted
                 select case(boundary)
                   case(left_boundary)
-                    local_this_xx(1)=(this%values(2)-2._real64*this%values(1)+this%values(N)[left_neighbor])/dx**2    
+                    local_this_xx(1)=(this%values(2)-2._real64*this%values(1)+this%values(N)[left_neighbor])/dx**2
                   case(right_boundary)
-                    local_this_xx(N)=(this%values(1)[right_neighbor]-2._real64*this%values(N)+this%values(N-1))/dx**2  
+                    local_this_xx(N)=(this%values(1)[right_neighbor]-2._real64*this%values(N)+this%values(N-1))/dx**2
                   case default
                     error stop "global_field%x: invalid boundary"
                 end select
-                previous_count_xx(boundary) = event_count(boundary) 
-                received(boundary) = .true.  
+                previous_count_xx(boundary) = event_count(boundary)
+                received(boundary) = .true.
               case default
                 error stop "global_field%x: invalid number of events posted"
               end select work
             end if
           end do query
         end do spin
-      end block spin_query_work  
-    
+      end block spin_query_work
+
       this_xx = local_this_xx
       end associate
-      
+
       ! Ensures
       call this_xx%mark_as_defined
-    end if    
+    end if
   end function
-  
+
   subroutine output(this,unit,iotype,v_list,iostat,iomsg)
     class(global_field), intent(in) :: this
     integer, intent(in) :: unit ! Unit on which output happens (negative for internal file)
@@ -288,4 +288,4 @@ contains
   end subroutine
 
 
-end module 
+end module

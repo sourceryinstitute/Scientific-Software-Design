@@ -1,14 +1,26 @@
+module initializer
+  use iso_fortran_env, only : real64
+  implicit none
+contains
+  pure function ten_sin(x) result(ten_sin_x)
+    real(real64), intent(in) :: x
+    real(real64) :: ten_sin_x
+    ten_sin_x = 10._real64*sin(x)
+  end function
+end module
+
 program main
   use iso_fortran_env, only : real64,int64,compiler_version,compiler_options
   use ieee_arithmetic, only : ieee_is_nan
+  use initializer, only  : ten_sin
   use global_field_module, only : global_field,initial_condition
   use ForTrilinos_assertion_utility, only : assert,error_message
   implicit none
   type(global_field) :: u,u_half,half_uu
-  ! These constants produce a more higher-resolution version of the curve represented by the circles 
+  ! These constants produce a more higher-resolution version of the curve represented by the circles
   ! in Fig. 4.6 of Scientific Software Design: The Object-Oriented Way (Cambridge Univ. Press, 2011):
-  real(real64), parameter :: nu=1.,final_time=0.6_real64,tolerance=1.E-3_real64,safety_factor=0.1_real64
-  ! The nodes=512 case fits within the Sourcery Lubuntu virtual machine. Larger runs crash -- probably 
+  real(real64), parameter :: nu=1.,final_time=0.1_real64,tolerance=1.E-3_real64,safety_factor=0.1_real64
+  ! The nodes=512 case fits within the Sourcery Lubuntu virtual machine. Larger runs crash -- probably
   ! due to gfortran-induced memory leaks.  Scalability greatly improves for runs larger than nodes=512.
   integer(int64), parameter :: nodes=240
   real(real64) :: time=0.,dt,dx
@@ -82,9 +94,4 @@ contains
     stable_time_step = safety_factor*stability_limit(order_of_accuracy)*(delta_x**2)/(4._real64*diffusivity)
   end function
 
-  pure function ten_sin(x) result(ten_sin_x)
-    real(real64), intent(in) :: x
-    real(real64) :: ten_sin_x
-    ten_sin_x = 10._real64*sin(x)
-  end function
 end program
