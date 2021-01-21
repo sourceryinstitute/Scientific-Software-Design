@@ -103,7 +103,8 @@ contains
     real(real64), allocatable :: local_grid(:)
 
     ! Requires
-    call assert(mod(num_points,num_images())==0,error_message("global_field%set: num_points not evenly divisible by num_images()"))
+    call assert(mod(num_points,int(num_images(), int64))==0, &
+      error_message("global_field%set: num_points not evenly divisible by num_images()"))
 
     num_global_points=num_points
     num_local_points=num_points/num_images()

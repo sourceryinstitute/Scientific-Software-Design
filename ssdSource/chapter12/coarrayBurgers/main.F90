@@ -1,6 +1,18 @@
+module initializer
+  use iso_fortran_env, only : real64
+  implicit none
+contains
+  pure function ten_sin(x) result(ten_sin_x)
+    real(real64), intent(in) :: x
+    real(real64) :: ten_sin_x
+    ten_sin_x = 10._real64*sin(x)
+  end function
+end module
+
 program main
   use iso_fortran_env, only : real64,int64,compiler_version,compiler_options
   use ieee_arithmetic, only : ieee_is_nan
+  use initializer, only  : ten_sin
   use global_field_module, only : global_field,initial_condition
   use ForTrilinos_assertion_utility, only : assert,error_message
   implicit none
@@ -82,9 +94,4 @@ contains
     stable_time_step = safety_factor*stability_limit(order_of_accuracy)*(delta_x**2)/(4._real64*diffusivity)
   end function
 
-  pure function ten_sin(x) result(ten_sin_x)
-    real(real64), intent(in) :: x
-    real(real64) :: ten_sin_x
-    ten_sin_x = 10._real64*sin(x)
-  end function
 end program
